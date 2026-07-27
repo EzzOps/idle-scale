@@ -179,9 +179,6 @@ func main() {
 	if err := (&controller.DeploymentReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
-		Config: controller.Config{
-			SentinelImage: getEnvDefault("SENTINEL_IMAGE", "ghcr.io/ezzops/idle-scale-sentinel:latest"),
-		},
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "Failed to create controller", "controller", "deployment")
 		os.Exit(1)
@@ -202,11 +199,4 @@ func main() {
 		setupLog.Error(err, "Failed to run manager")
 		os.Exit(1)
 	}
-}
-
-func getEnvDefault(key, def string) string {
-	if v := os.Getenv(key); v != "" {
-		return v
-	}
-	return def
 }

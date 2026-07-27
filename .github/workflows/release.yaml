@@ -37,6 +37,15 @@ jobs:
             ${{ env.CONTROLLER_IMAGE }}:${{ steps.version.outputs.VERSION }}
             ${{ env.CONTROLLER_IMAGE }}:latest
       - name: Build and push sentinel
+      - name: Build and push agent
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile.agent
+          push: true
+          tags: |
+            ghcr.io/ezzops/idle-scale-agent:latest
+            ghcr.io/ezzops/idle-scale-agent:${{ steps.version.outputs.VERSION }}
         uses: docker/build-push-action@v6
         with:
           context: .

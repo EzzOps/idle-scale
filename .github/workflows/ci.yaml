@@ -46,5 +46,6 @@ jobs:
           cache: true
       - name: Build controller
         run: go build -ldflags="-s -w" -trimpath -o bin/controller ./cmd/main.go
-      - name: Build sentinel
+      - name: Build agent
+        run: go build -ldflags="-s -w" -trimpath -o bin/agent ./cmd/agent/main.go
         run: go build -ldflags="-s -w" -trimpath -o bin/sentinel ./cmd/sentinel/main.go

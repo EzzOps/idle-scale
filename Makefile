@@ -298,3 +298,11 @@ helm-package: ## Package Helm chart
 
 .PHONY: all
 all: build sentinel ## Build everything
+
+.PHONY: agent
+agent: ## Build the agent binary
+	go build -ldflags="-s -w" -trimpath -o bin/agent ./cmd/agent/main.go
+
+.PHONY: agent-image
+agent-image: ## Build the agent Docker image
+	docker build -t idle-scale-agent:dev -f Dockerfile.agent .

@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "idle-scale.controllerName" . }}
+  name: {{ .Release.Name }}-idle-scale-controller
   namespace: idle-scale-system
   labels:
     {{- include "idle-scale.labels" . | nindent 4 }}
@@ -17,13 +17,12 @@ spec:
         app.kubernetes.io/name: idle-scale
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
-      serviceAccountName: {{ .Values.serviceAccount.name }}
+      serviceAccountName: idle-scale-controller
       containers:
         - name: controller
           image: "{{ .Values.controller.image.repository }}:{{ .Values.controller.image.tag }}"
           imagePullPolicy: {{ .Values.controller.image.pullPolicy }}
-          env:
-            - name: SENTINEL_IMAGE
-              value: "{{ .Values.sentinel.image.repository }}:{{ .Values.sentinel.image.tag }}"
           resources:
-            {{- toYaml .Values.controller.resources | nindent 12 }}
+            requests:
+              cpu: 50m
+              memory: 50Mi

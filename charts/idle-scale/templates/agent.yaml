@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ .Release.Name }}-idle-scale-agent
+  namespace: idle-scale-system
+  labels:
+    app.kubernetes.io/name: idle-scale
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: idle-scale-agent
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: idle-scale-agent
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      serviceAccountName: idle-scale-agent
+      hostNetwork: true
+      containers:
+        - name: agent
+          image: "{{ .Values.agent.image.repository }}:{{ .Values.agent.image.tag }}"
+          imagePullPolicy: {{ .Values.agent.image.pullPolicy }}
+          volumeMounts:
+            - name: proc-net
+              mountPath: /host/proc/net
+              readOnly: true
+          env:
+            - name: CONNTRACK_PATH
+              value: /host/proc/net/nf_conntrack
+          resources:
+            requests:
+              cpu: 10m
+              memory: 20Mi
+      volumes:
+        - name: proc-net
+          hostPath:
+            path: /proc/net
+            type: Directory

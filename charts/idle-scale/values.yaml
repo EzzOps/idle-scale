@@ -4,14 +4,10 @@ controller:
     tag: latest
     pullPolicy: IfNotPresent
   replicas: 1
-  resources:
-    requests:
-      cpu: 50m
-      memory: 50Mi
 
-sentinel:
+agent:
   image:
-    repository: ghcr.io/ezzops/idle-scale-sentinel
+    repository: ghcr.io/ezzops/idle-scale-agent
     tag: latest
     pullPolicy: IfNotPresent
 
@@ -19,5 +15,5 @@ rbac:
   create: true
 
 serviceAccount:
-  create: true
-  name: idle-scale-controller
+  controller: idle-scale-controller
+  agent: idle-scale-agent
