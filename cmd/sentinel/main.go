@@ -25,7 +25,7 @@ func main() {
 		fmt.Fprintf(os.Stderr, "sentinel: listen %s: %v\n", addr, err)
 		os.Exit(1)
 	}
-	defer ln.Close()
+	defer ln.Close() //nolint:errcheck
 
 	for {
 		conn, err := ln.Accept()
@@ -38,7 +38,7 @@ func main() {
 }
 
 func handleConn(conn net.Conn, ignoreSet map[string]bool) {
-	defer conn.Close()
+	defer conn.Close() //nolint:errcheck
 	conn.SetReadDeadline(time.Now().Add(200 * time.Millisecond)) //nolint:errcheck
 	reader := bufio.NewReaderSize(conn, 512)
 	buf, err := reader.Peek(512)

@@ -94,7 +94,7 @@ func (r *DeploymentReconciler) handleTerminatedSentinels(ctx context.Context, de
 		if len(cs) > 0 && cs[0].State.Terminated != nil && cs[0].State.Terminated.ExitCode == idlev1.SentinelExitCode {
 			log.Info("traffic detected via sentinel, scaling up")
 			patch := client.MergeFrom(deploy.DeepCopy())
-			deploy.Spec.Replicas = ptr(int32(1))
+			var one int32 = 1; deploy.Spec.Replicas = &one
 			if err := r.Patch(ctx, deploy, patch); err != nil {
 				return err
 			}
@@ -138,7 +138,7 @@ func (r *DeploymentReconciler) createSentinel(ctx context.Context, deploy *appsv
 				},
 			}},
 			RestartPolicy:                 corev1.RestartPolicyNever,
-			TerminationGracePeriodSeconds: ptr(int64(2)),
+			TerminationGracePeriodSeconds: func() *int64 { i := int64(2); return &i }(),
 		},
 	}
 	if err := controllerutil.SetControllerReference(deploy, pod, r.Scheme); err != nil {
@@ -208,7 +208,6 @@ func (r *DeploymentReconciler) sentinelImage() string {
 	return "ghcr.io/ezzops/idle-scale-sentinel:latest"
 }
 
-func ptr[T any](v T) *T { return &v }
 
 func (r *DeploymentReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
