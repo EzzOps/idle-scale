@@ -8,6 +8,7 @@ permissions:
 env:
   REGISTRY: ghcr.io
   CONTROLLER_IMAGE: ghcr.io/ezzops/idle-scale-controller
+  AGENT_IMAGE: ghcr.io/ezzops/idle-scale-agent
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -35,8 +36,15 @@ jobs:
           tags: |
             ${{ env.CONTROLLER_IMAGE }}:${{ steps.version.outputs.VERSION }}
             ${{ env.CONTROLLER_IMAGE }}:latest
+      - name: Build and push agent
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile.agent
           push: true
           tags: |
+            ${{ env.AGENT_IMAGE }}:${{ steps.version.outputs.VERSION }}
+            ${{ env.AGENT_IMAGE }}:latest
       - name: Package Helm chart
         run: |
           sed -i "s/version:.*/version: ${{ steps.version.outputs.VERSION }}/" charts/idle-scale/Chart.yaml
