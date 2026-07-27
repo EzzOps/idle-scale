@@ -50,6 +50,7 @@ jobs:
           sed -i "s/version:.*/version: ${{ steps.version.outputs.VERSION }}/" charts/idle-scale/Chart.yaml
           sed -i "s/appVersion:.*/appVersion: \"${{ steps.version.outputs.VERSION }}\"/" charts/idle-scale/Chart.yaml
           helm package charts/idle-scale -d dist/
+          helm repo index dist/ --url https://ezzops.github.io/idle-scale/charts
       - name: Deploy Helm repo to Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
