@@ -1,19 +1,6 @@
-run:
-  timeout: 5m
-  allow-parallel-runners: true
-linters-settings:
-  depguard:
-    rules:
-      forbid-sort-pkg:
-        deny:
-          - pkg: sort
-            desc: Should be replaced with slices package
-  revive:
-    rules:
-      - name: comment-spacings
-      - name: import-shadowing
+version: "2"
 linters:
-  disable-all: true
+  default: none
   enable:
     - copyloopvar
     - dupl
@@ -33,17 +20,38 @@ linters:
     - unconvert
     - unparam
     - unused
-issues:
-  exclude-generated: lax
-  exclude-rules:
-    - linters:
-        - lll
-      path: api/*
-    - linters:
-        - dupl
-        - lll
-      path: internal/*
-  exclude-dirs:
-    - third_party$
-    - builtin$
-    - examples$
+  settings:
+    depguard:
+      rules:
+        forbid-sort-pkg:
+          deny:
+            - pkg: sort
+              desc: Should be replaced with slices package
+    revive:
+      rules:
+        - name: comment-spacings
+        - name: import-shadowing
+  exclusions:
+    generated: lax
+    rules:
+      - linters:
+          - lll
+        path: api/*
+      - linters:
+          - dupl
+          - lll
+        path: internal/*
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
