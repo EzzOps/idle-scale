@@ -94,7 +94,8 @@ func (r *DeploymentReconciler) handleTerminatedSentinels(ctx context.Context, de
 		if len(cs) > 0 && cs[0].State.Terminated != nil && cs[0].State.Terminated.ExitCode == idlev1.SentinelExitCode {
 			log.Info("traffic detected via sentinel, scaling up")
 			patch := client.MergeFrom(deploy.DeepCopy())
-			var one int32 = 1; deploy.Spec.Replicas = &one
+			var one int32 = 1
+			deploy.Spec.Replicas = &one
 			if err := r.Patch(ctx, deploy, patch); err != nil {
 				return err
 			}
@@ -207,7 +208,6 @@ func (r *DeploymentReconciler) sentinelImage() string {
 	}
 	return "ghcr.io/ezzops/idle-scale-sentinel:latest"
 }
-
 
 func (r *DeploymentReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).

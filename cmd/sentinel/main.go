@@ -38,7 +38,7 @@ func main() {
 }
 
 func handleConn(conn net.Conn, ignoreSet map[string]bool) {
-	defer conn.Close() //nolint:errcheck
+	defer conn.Close()                                           //nolint:errcheck
 	conn.SetReadDeadline(time.Now().Add(200 * time.Millisecond)) //nolint:errcheck
 	reader := bufio.NewReaderSize(conn, 512)
 	buf, err := reader.Peek(512)
