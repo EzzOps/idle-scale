@@ -8,7 +8,6 @@ permissions:
 env:
   REGISTRY: ghcr.io
   CONTROLLER_IMAGE: ghcr.io/ezzops/idle-scale-controller
-  SENTINEL_IMAGE: ghcr.io/ezzops/idle-scale-sentinel
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -36,24 +35,8 @@ jobs:
           tags: |
             ${{ env.CONTROLLER_IMAGE }}:${{ steps.version.outputs.VERSION }}
             ${{ env.CONTROLLER_IMAGE }}:latest
-      - name: Build and push sentinel
-      - name: Build and push agent
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: Dockerfile.agent
           push: true
           tags: |
-            ghcr.io/ezzops/idle-scale-agent:latest
-            ghcr.io/ezzops/idle-scale-agent:${{ steps.version.outputs.VERSION }}
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: Dockerfile.sentinel
-          push: true
-          tags: |
-            ${{ env.SENTINEL_IMAGE }}:${{ steps.version.outputs.VERSION }}
-            ${{ env.SENTINEL_IMAGE }}:latest
       - name: Package Helm chart
         run: |
           sed -i "s/version:.*/version: ${{ steps.version.outputs.VERSION }}/" charts/idle-scale/Chart.yaml
