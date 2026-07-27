@@ -1,0 +1,40 @@
+name: E2E
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        k8s: ["v1.29.2", "v1.30.0"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.23"
+          cache: true
+      - name: Create kind cluster
+        uses: helm/kind-action@v1
+        with:
+          version: v0.24.0
+          node_image: "kindest/node:${{ matrix.k8s }}"
+      - name: Build controller image
+        run: |
+          docker build -t idle-scale-controller:test -f Dockerfile.controller .
+          kind load docker-image idle-scale-controller:test
+      - name: Build sentinel image
+        run: |
+          docker build -t idle-scale-sentinel:test -f Dockerfile.sentinel .
+          kind load docker-image idle-scale-sentinel:test
+      - name: Deploy
+        run: |
+          kubectl create ns idle-scale-system
+          kubectl -n idle-scale-system create deployment idle-scale-controller --image=idle-scale-controller:test
+          kubectl wait --for=condition=available deploy/idle-scale-controller -n idle-scale-system --timeout=60s || kubectl describe pods -n idle-scale-system
+      - name: Run tests
+        run: chmod +x ./e2e/test.sh && ./e2e/test.sh
