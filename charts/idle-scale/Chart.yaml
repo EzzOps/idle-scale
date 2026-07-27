@@ -1,0 +1,17 @@
+apiVersion: v2
+name: idle-scale
+description: Idle Scale — scale Deployments to zero and wake on traffic via sentinel pods
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+home: https://github.com/EzzOps/idle-scale
+sources:
+  - https://github.com/EzzOps/idle-scale
+keywords:
+  - kubernetes
+  - idle
+  - scale-to-zero
+  - autoscaling
+maintainers:
+  - name: EzzOps
+    url: https://github.com/EzzOps

@@ -1,0 +1,23 @@
+controller:
+  image:
+    repository: ghcr.io/ezzops/idle-scale-controller
+    tag: latest
+    pullPolicy: IfNotPresent
+  replicas: 1
+  resources:
+    requests:
+      cpu: 50m
+      memory: 50Mi
+
+sentinel:
+  image:
+    repository: ghcr.io/ezzops/idle-scale-sentinel
+    tag: latest
+    pullPolicy: IfNotPresent
+
+rbac:
+  create: true
+
+serviceAccount:
+  create: true
+  name: idle-scale-controller
