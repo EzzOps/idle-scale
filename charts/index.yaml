@@ -3,10 +3,10 @@ entries:
   idle-scale:
   - apiVersion: v2
     appVersion: 0.1.0-rc1
-    created: "2026-07-27T09:48:54.028566313Z"
+    created: "2026-07-27T10:44:20.547608023Z"
     description: Idle Scale — scale Deployments to zero and wake on traffic via sentinel
       pods
-    digest: c7c37dd2bc5760cc7db28fc0702342d602e07c007ff58327be5dda2c9aba3966
+    digest: b6ae5dec21d7fd402774e788df0e0d5a1a86023ec5bacdb3220273fbf27777dc
     home: https://github.com/EzzOps/idle-scale
     keywords:
     - kubernetes
@@ -23,4 +23,4 @@ entries:
     urls:
     - https://ezzops.github.io/idle-scale/charts/idle-scale-0.1.0-rc1.tgz
     version: 0.1.0-rc1
-generated: "2026-07-27T09:48:54.024295783Z"
+generated: "2026-07-27T10:44:20.547309431Z"
