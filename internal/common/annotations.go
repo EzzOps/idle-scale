@@ -1,7 +1,7 @@
 package common
 
 const (
-	AnnotationEnabled      = "idle-scale.nous.io/enabled"
-	AnnotationIdleTimeout  = "idle-scale.nous.io/idle-timeout"
-	AnnotationStartupGrace = "idle-scale.nous.io/startup-grace"
+	AnnotationEnabled      = "idle-scale.ezzops.io/enabled"
+	AnnotationIdleTimeout  = "idle-scale.ezzops.io/idle-timeout"
+	AnnotationStartupGrace = "idle-scale.ezzops.io/startup-grace"
 )

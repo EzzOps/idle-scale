@@ -19,7 +19,7 @@ import (
 	"k8s.io/klog/v2"
 )
 
-const annotationEnabled = "idle-scale.nous.io/enabled"
+const annotationEnabled = "idle-scale.ezzops.io/enabled"
 
 func main() {
 	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)

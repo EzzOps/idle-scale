@@ -4,10 +4,10 @@ Scale Kubernetes Deployments to zero and wake on traffic via sentinel pods.
 
 ## How it works
 
-1. Annotate a Deployment with `idle-scale.nous.io/enabled: "true"`
-2. The controller creates a **sentinel pod** when the Deployment scales to zero
-3. The sentinel pod has the same labels as the original Deployment, so the Service routes traffic to it
-4. The sentinel listens on the service port and inspects incoming connections:
+1. Annotate a Service with `idle-scale.ezzops.io/enabled: "true"`
+2. Agent DaemonSet watches conntrack on each node a **sentinel pod** when the Deployment scales to zero
+3. When a new connection hits the ClusterIP, conntrack records it as the original Deployment, so the Service routes traffic to it
+4. Agent detects it within 2s and scales the Deployment to 1 and inspects incoming connections:
    - Health check paths (`/healthz`, `/readyz`, `/livez`, `/metrics`) → silently ignored
    - Real traffic → exits with code **42**
 5. The controller sees the exit code → scales the Deployment back up
@@ -24,18 +24,16 @@ helm repo add idle-scale https://ezzops.github.io/idle-scale/charts
 helm install idle-scale idle-scale/idle-scale
 
 # Opt in a deployment
-kubectl annotate deploy my-api idle-scale.nous.io/enabled=true
+kubectl annotate deploy my-api idle-scale.ezzops.io/enabled=true
 ```
 
 ## Annotations
 
 | Annotation | Default | Description |
 |---|---|---|
-| `idle-scale.nous.io/enabled` | — | Set to `"true"` to enable |
-| `idle-scale.nous.io/port` | `8080` | Port the sentinel listens on |
-| `idle-scale.nous.io/ignore-paths` | `/healthz,/readyz,/livez,/metrics` | HTTP paths that won't wake the deployment |
-| `idle-scale.nous.io/idle-timeout` | `10m` | How long before scaling to zero |
-| `idle-scale.nous.io/startup-grace` | `10m` | Don't scale new deployments during this window |
+| `idle-scale.ezzops.io/enabled` | — | Set to `"true"` to enable |
+| `idle-scale.ezzops.io/idle-timeout` | `10m` | How long before scaling to zero |
+| `idle-scale.ezzops.io/startup-grace` | `10m` | Don't scale new deployments during this window |
 
 ## Architecture
 

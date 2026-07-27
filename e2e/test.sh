@@ -17,7 +17,7 @@ sleep 5
 
 # 4. Verify sentinel pod appears
 for i in $(seq 1 10); do
-  SENTINEL=$(kubectl get pods -l idle-scale.nous.io/role=sentinel -o name 2>/dev/null || true)
+  SENTINEL=$(kubectl get pods -l idle-scale.ezzops.io/role=sentinel -o name 2>/dev/null || true)
   if [ -n "$SENTINEL" ]; then
     echo "✅ Sentinel created: $SENTINEL"
     break
