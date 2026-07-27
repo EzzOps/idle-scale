@@ -1,7 +1,6 @@
 # syntax=docker/dockerfile:1
 # Stage 1: Build controller binary
 FROM golang:1.26 AS builder
-RUN apk add --no-cache git
 WORKDIR /workspace
 COPY go.mod go.sum ./
 RUN go mod download
