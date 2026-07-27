@@ -108,11 +108,11 @@ func (r *DeploymentReconciler) handleTerminatedSentinels(ctx context.Context, de
 
 func (r *DeploymentReconciler) createSentinel(ctx context.Context, deploy *appsv1.Deployment) error {
 	name := fmt.Sprintf("%s-sentinel", deploy.Name)
-	labels := deploy.Spec.Template.ObjectMeta.Labels
+	labels := deploy.Spec.Template.Labels
 	if labels == nil {
 		labels = map[string]string{}
 	}
-	labels[idlev1.LabelSentinel] = "sentinel"
+	labels[idlev1.LabelSentinel] = idlev1.SentinelRoleValue
 	labels[idlev1.LabelDeployRef] = deploy.Name
 
 	pod := &corev1.Pod{
@@ -191,14 +191,14 @@ func (r *DeploymentReconciler) discoverPort(deploy *appsv1.Deployment) string {
 	if p, ok := deploy.Annotations[idlev1.AnnotationPort]; ok {
 		return p
 	}
-	return "8080"
+	return idlev1.DefaultPort
 }
 
 func (r *DeploymentReconciler) discoverIgnorePaths(deploy *appsv1.Deployment) string {
 	if p, ok := deploy.Annotations[idlev1.AnnotationIgnorePaths]; ok {
 		return p
 	}
-	return "/healthz,/readyz,/livez,/metrics"
+	return idlev1.DefaultIgnorePaths
 }
 
 func (r *DeploymentReconciler) sentinelImage() string {

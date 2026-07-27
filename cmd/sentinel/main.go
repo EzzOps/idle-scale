@@ -13,8 +13,10 @@ func main() {
 	port := getEnv("IDLE_SERVICE_PORT", "8080")
 	ignoreRaw := getEnv("IDLE_IGNORE_PATHS", "/healthz,/readyz,/livez,/metrics")
 	ignoreSet := make(map[string]bool)
-	for _, p := range strings.Split(ignoreRaw, ",") {
-		ignoreSet[strings.TrimSpace(p)] = true
+	if len(ignoreRaw) > 0 {
+		for p := range strings.SplitSeq(ignoreRaw, ",") {
+			ignoreSet[strings.TrimSpace(p)] = true
+		}
 	}
 
 	addr := fmt.Sprintf(":%s", port)
@@ -37,7 +39,7 @@ func main() {
 
 func handleConn(conn net.Conn, ignoreSet map[string]bool) {
 	defer conn.Close()
-	conn.SetReadDeadline(time.Now().Add(200 * time.Millisecond))
+	conn.SetReadDeadline(time.Now().Add(200 * time.Millisecond)) //nolint:errcheck
 	reader := bufio.NewReaderSize(conn, 512)
 	buf, err := reader.Peek(512)
 	if err != nil {
